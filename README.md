@@ -1,5 +1,4 @@
 # Enron-Email-Dataset
-Project work done as part of Udacity's  Data Analyst Nanodegree course.
 
 [Certficate](https://tinyurl.com/58kks2dd)
 
