@@ -5,7 +5,7 @@ From raw emails to risk signals — a full-lifecycle analytics pipeline over the
 [![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)](https://docs.pytest.org/)
 [![Security](https://img.shields.io/badge/security-OpenSSL-721412?logo=openssl&logoColor=white)](https://www.openssl.org/)
 [![Container](https://img.shields.io/badge/container-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 
 ## Executive Summary
 
