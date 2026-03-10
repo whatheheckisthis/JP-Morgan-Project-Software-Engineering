@@ -6,7 +6,7 @@
 [![Container](https://img.shields.io/badge/container-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A professional analytics workspace for exploring and validating the Enron email and financial dataset, with reusable Python modules, notebooks, and lightweight automated tests.
+This repository is scoped as an end-to-end analytics project over the Enron email and financial corpus, covering data ingestion, feature engineering, exploratory analysis, and reproducible validation workflows. Principal Component Analysis (PCA) is positioned as a core dimensionality-reduction technique to isolate the highest-variance behavioral and financial signals, improve model interpretability, and support downstream tasks including anomaly detection, risk-focused profiling, and security-aware data governance within a broader NLP + quantitative analytics pipeline.
 
 ## Repository Layout
 
