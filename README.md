@@ -1,4 +1,4 @@
-# Intent-to-Auditable-Trust-Object
+# Intent-to-Auditable-Trust-Object (IATO)
 From raw emails to risk signals — a full-lifecycle analytics pipeline over the Enron corpus using PCA, NLP, and quantitative methods for anomaly detection, profiling, and reproducible validation.
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
@@ -31,7 +31,7 @@ Principal Component Analysis (PCA) is the central dimensionality-reduction techn
 - **Risk Profiling**: Characterizing individuals, groups, or departments by behavioral and financial risk indicators.
 - **Reproducibility**: The ability to rerun the same workflow and obtain consistent results with documented parameters.
 
-## Workflow (ASCII)
+## Workflow 
 
 ```text
 +------------------+       +-------------------------+       +----------------------+
@@ -68,7 +68,7 @@ The pipeline is organized as a coherent system spanning:
 
 The architecture treats **NLP-derived communication signals** and **quantitative financial signals** as complementary views of the same underlying organizational behavior.
 
-## Why PCA Is Central in This Repository
+## Why PCA Is Central?
 
 PCA is applied as a core preprocessing step to:
 
@@ -77,7 +77,7 @@ PCA is applied as a core preprocessing step to:
 - Reduce multicollinearity before downstream modeling and scoring
 - Support stable, explainable, and repeatable analysis workflows
 
-## Downstream Analytics Objectives
+## Downstream Analytics
 
 Built on top of ingestion + feature engineering + PCA, the repository supports:
 
@@ -136,7 +136,7 @@ Install the following tools:
 ### 2) Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/Intent-to-Auditable-Trust-Object.git
+git clone https://github.com/<whatheheckisthis>/Intent-to-Auditable-Trust-Object.git
 cd Intent-to-Auditable-Trust-Object
 ```
 
