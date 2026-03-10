@@ -110,7 +110,7 @@ ci/         # CI configuration mirrors and pipeline assets
 - **Notebook-driven analysis** for exploratory finance and NLP tasks
 - **ITIL 4 / SecDevOps-aligned structure** for governance and maintainability
 
-## Controls Mapping 
+## Core Capabilities → Controls Mapping (SOC 2, ISM, Essential Eight ML4)
 
 > This mapping is a governance alignment aid for engineering teams and audit preparation. It is not a formal certification statement.
 > Control references below are **spec identifiers** to support traceability; validate against the exact release/version used by your compliance program.
@@ -136,7 +136,7 @@ Install the following tools:
 ### 2) Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/<whatheheckisthis>/Intent-to-Auditable-Trust-Object.git
 cd Intent-to-Auditable-Trust-Object
 ```
 
