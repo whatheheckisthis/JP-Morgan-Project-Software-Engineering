@@ -1,4 +1,5 @@
-# Enron Behavioral & Financial Analytics Pipeline
+# Intent-to-Auditable-Trust-Object
+From raw emails to risk signals — a full-lifecycle analytics pipeline over the Enron corpus using PCA, NLP, and quantitative methods for anomaly detection, profiling, and reproducible validation.
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)](https://docs.pytest.org/)
