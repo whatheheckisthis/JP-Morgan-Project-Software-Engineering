@@ -1,4 +1,4 @@
-# Intent-to-Auditable-Trust-Object
+# Intent-to-Auditable-Trust-Object (IATO)
 From raw emails to risk signals — a full-lifecycle analytics pipeline over the Enron corpus using PCA, NLP, and quantitative methods for anomaly detection, profiling, and reproducible validation.
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
