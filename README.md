@@ -1,4 +1,4 @@
-# Enron Analytics Repository
+# Enron Behavioral & Financial Analytics Pipeline
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)](https://docs.pytest.org/)
@@ -6,7 +6,92 @@
 [![Container](https://img.shields.io/badge/container-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-This repository is scoped as an end-to-end analytics project over the Enron email and financial corpus, covering data ingestion, feature engineering, exploratory analysis, and reproducible validation workflows. Principal Component Analysis (PCA) is positioned as a core dimensionality-reduction technique to isolate the highest-variance behavioral and financial signals, improve model interpretability, and support downstream tasks including anomaly detection, risk-focused profiling, and security-aware data governance within a broader NLP + quantitative analytics pipeline.
+## Executive Summary
+
+This repository started as a broad JPMC-context resource collection and matured into a structured, reproducible analytics pipeline built around the Enron email and financial corpus. The project integrates NLP over communication data with quantitative analysis over financial records to produce a unified behavioral risk lens.
+
+Principal Component Analysis (PCA) is the central dimensionality-reduction technique used to compress noisy, high-dimensional features into interpretable components that preserve the most meaningful variance. This foundation supports downstream anomaly detection, risk profiling, and governance-focused analytics in regulated environments.
+
+## Project Objectives
+
+1. Build a repeatable end-to-end pipeline from ingestion to validated outputs.
+2. Combine email-language and financial signals to model organizational behavior.
+3. Use PCA to improve interpretability and reduce multicollinearity before modeling.
+4. Enable risk-focused use cases such as anomaly detection and entity profiling.
+5. Preserve auditability, traceability, and security hygiene for compliance-heavy contexts.
+
+## Definitions
+
+- **Corpus**: The combined Enron email and financial datasets used for analysis.
+- **NLP (Natural Language Processing)**: Techniques used to parse, normalize, and extract signal from text communication.
+- **Feature Engineering**: Transforming raw records into model-ready variables.
+- **PCA (Principal Component Analysis)**: A dimensionality-reduction method that projects features into orthogonal components ordered by explained variance.
+- **Anomaly Detection**: Identifying unusual communication or transaction patterns relative to baseline behavior.
+- **Risk Profiling**: Characterizing individuals, groups, or departments by behavioral and financial risk indicators.
+- **Reproducibility**: The ability to rerun the same workflow and obtain consistent results with documented parameters.
+
+## Workflow (ASCII)
+
+```text
++------------------+       +-------------------------+       +----------------------+
+| Data Sources     | ----> | Ingestion & Normalization| ---> | Feature Engineering  |
+| - Enron Emails   |       | - Schema alignment       |       | - NLP features       |
+| - Financial Data |       | - Cleaning/typing        |       | - Financial features |
++------------------+       +-------------------------+       +----------------------+
+                                                                     |
+                                                                     v
+                                                           +----------------------+
+                                                           | Dimensionality        |
+                                                           | Reduction (PCA)       |
+                                                           | - Variance isolation  |
+                                                           | - Collinearity cut    |
+                                                           +----------------------+
+                                                                     |
+                                                                     v
++------------------+       +-------------------------+       +----------------------+
+| Validation       | <---- | Modeling & Scoring      | ----> | Outputs              |
+| - Tests/checks   |       | - Anomaly detection     |       | - Risk profiles      |
+| - Parameter logs |       | - Behavior segmentation |       | - Alert candidates   |
++------------------+       +-------------------------+       | - Governance reports |
+                                                              +----------------------+
+```
+
+## Project Overview
+
+The pipeline is organized as a coherent system spanning:
+
+- Data ingestion
+- Feature engineering
+- Exploratory analysis
+- Reproducible validation workflows
+
+The architecture treats **NLP-derived communication signals** and **quantitative financial signals** as complementary views of the same underlying organizational behavior.
+
+## Why PCA Is Central in This Repository
+
+PCA is applied as a core preprocessing step to:
+
+- Isolate high-variance behavioral and financial signals from noisy, high-dimensional inputs
+- Improve model interpretability by reducing feature space complexity
+- Reduce multicollinearity before downstream modeling and scoring
+- Support stable, explainable, and repeatable analysis workflows
+
+## Downstream Analytics Objectives
+
+Built on top of ingestion + feature engineering + PCA, the repository supports:
+
+- **Anomaly detection** across communication and transaction patterns
+- **Risk-focused profiling** of individuals and departments
+- **Security-aware governance** in regulated and compliance-heavy settings
+- **Institutional forensics** and behavioral analytics use cases beyond Enron
+
+## Reproducibility and Validation
+
+The repository is designed to be reproducible by default:
+
+- Validation steps are documented and executable
+- Key workflows are parameterized for reruns
+- Project structure supports repeatability across similar datasets
 
 ## Repository Layout
 
@@ -19,10 +104,10 @@ ci/         # CI configuration mirrors and pipeline assets
 
 ## Core Capabilities
 
-- **Outlier management** utilities for regression-style workflows.
-- **Email parsing and stemming** for text analytics pipelines.
-- **Notebook-driven analysis** for exploratory finance and NLP tasks.
-- **ITIL 4 / SecDevOps-aligned structure** to support governance and maintainability.
+- **Outlier management** utilities for regression-style workflows
+- **Email parsing and stemming** for text analytics pipelines
+- **Notebook-driven analysis** for exploratory finance and NLP tasks
+- **ITIL 4 / SecDevOps-aligned structure** for governance and maintainability
 
 ## Quick Start
 
@@ -32,35 +117,24 @@ Install the following tools:
 
 - Python 3.10+
 - pip
-- OpenSSL (optional but recommended for file integrity checks)
+- OpenSSL (optional but recommended for integrity checks)
 - Docker Desktop or Docker Engine (optional, for containerized execution)
 
 ### 2) Clone the repository
 
-**Bash (macOS/Linux/Git Bash):**
-
 ```bash
-git clone <your-repo-url>
-cd JP-Morgan-Project-Software-Engineering
-```
-
-**Windows CMD:**
-
-```cmd
 git clone <your-repo-url>
 cd JP-Morgan-Project-Software-Engineering
 ```
 
 ### 3) Create and activate a virtual environment
 
-**Bash (macOS/Linux/Git Bash):**
-
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-**Windows CMD:**
+Windows CMD:
 
 ```cmd
 python -m venv .venv
@@ -82,25 +156,19 @@ pytest -q
 
 ## OpenSSL Usage (Integrity / Security)
 
-Use OpenSSL to create and validate checksums for data or artifacts shared across environments.
-
 ### Generate SHA-256 checksum
 
 ```bash
 openssl dgst -sha256 path/to/file
 ```
 
-### Verify a known checksum (example)
+### Verify a known checksum
 
 ```bash
 echo "<expected_sha256>  path/to/file" | sha256sum -c -
 ```
 
-> On Windows CMD, you can still use OpenSSL directly if installed, or use PowerShell `Get-FileHash` as an equivalent.
-
 ## Docker Usage
-
-Run tests inside a disposable Python container without local Python setup.
 
 ```bash
 docker run --rm -it \
@@ -110,7 +178,7 @@ docker run --rm -it \
   bash -lc "pip install -U pip pytest nltk && pytest -q"
 ```
 
-### Windows CMD variant
+Windows CMD variant:
 
 ```cmd
 docker run --rm -it -v "%cd%:/workspace" -w /workspace python:3.11-slim bash -lc "pip install -U pip pytest nltk && pytest -q"
@@ -120,54 +188,26 @@ docker run --rm -it -v "%cd%:/workspace" -w /workspace python:3.11-slim bash -lc
 
 The repository organization reflects ITIL 4 and SecDevOps practices:
 
-- Clear separation between production logic (`src`) and verification (`tests`).
-- Dedicated documentation surface (`docs`) for analysis traceability.
-- CI artifacts under `ci` to support control visibility.
+- Clear separation between production logic (`src`) and verification (`tests`)
+- Dedicated documentation surface (`docs`) for analysis traceability
+- CI artifacts under `ci` to support control visibility
 
 For additional context, see `docs/itil4_secdevops_refactor.md`.
 
-
 ## Contributing
 
-Contributions are welcome and appreciated.
-
-1. Fork the repository and create a focused feature branch.
-2. Keep changes scoped and include clear commit messages.
-3. Run the test suite locally before opening a pull request:
-
-```bash
-pytest -q
-```
-
-4. Open a pull request with:
-   - A concise summary of what changed.
-   - Why the change is needed.
-   - Any validation steps or outputs.
-
-### Suggested contributor workflow
-
-```bash
-git checkout -b feat/<short-description>
-# make your changes
-pytest -q
-git add .
-git commit -m "feat: <describe change>"
-git push origin feat/<short-description>
-```
+1. Fork the repository and create a focused feature branch
+2. Keep changes scoped with clear commit messages
+3. Run the test suite locally before opening a pull request
+4. Open a pull request with a concise change summary and validation notes
 
 ## Security
 
-If you discover a potential security issue, please report it responsibly.
+If you discover a potential security issue, report it responsibly and avoid posting sensitive details in public issues.
 
-- **Do not** post sensitive vulnerability details in public issues.
-- Share findings privately with maintainers, including:
-  - Impact and affected component(s)
-  - Reproduction steps
-  - Suggested remediation (if available)
+Local development hygiene:
 
-### Security hygiene for local development
-
-- Validate downloaded files with checksums (see OpenSSL usage above).
-- Keep dependencies updated in your local environment.
-- Avoid committing secrets, credentials, or private keys.
-- Use environment variables for sensitive configuration.
+- Validate downloaded files with checksums
+- Keep dependencies updated
+- Avoid committing secrets or keys
+- Use environment variables for sensitive configuration
