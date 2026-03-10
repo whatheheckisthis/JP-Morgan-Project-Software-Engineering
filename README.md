@@ -110,6 +110,17 @@ ci/         # CI configuration mirrors and pipeline assets
 - **Notebook-driven analysis** for exploratory finance and NLP tasks
 - **ITIL 4 / SecDevOps-aligned structure** for governance and maintainability
 
+## Core Capabilities → Controls Mapping (SOC 2, ISM, Essential Eight ML4)
+
+> This mapping is a governance alignment aid for engineering teams and audit preparation. It is not a formal certification statement.
+
+| Core capability | SOC 2 mapping (Trust Services Criteria) | ISM mapping (control families) | Essential Eight ML4 mapping |
+|---|---|---|---|
+| Outlier management and data-quality cleaning | **Processing Integrity (PI):** input validation, error handling, and accuracy checks over model inputs/outputs. | **System/data integrity:** secure processing, validation, and assurance that analysis outputs remain reliable. | **Restrict administrative privileges**, **Patch applications**, and **Regular backups** to preserve trusted analytics execution and recoverability. |
+| Email parsing and stemming pipelines | **Security (CC):** secure handling of data pipelines and least-privilege operation for processing components. **Confidentiality (C):** controlled access to potentially sensitive text artifacts. | **Access control** and **data protection:** enforce least privilege and protect processed information through lifecycle controls. | **Application control**, **Multi-factor authentication**, and **User application hardening** for controlled execution paths and reduced script abuse risk. |
+| Notebook-driven analysis and reproducible research | **CC (change management, monitoring):** versioned analytical workflows with reviewability and traceability. **PI:** repeatable and reviewable processing outcomes. | **Governance, audit logging, and secure development:** traceable analytical change history and accountable execution. | **Microsoft Office macro settings** (where applicable), **Application control**, and **Regular backups** to harden analyst tooling and retain evidence artifacts. |
+| ITIL 4 / SecDevOps-aligned repository and CI structure | **CC (control environment):** policy-driven SDLC, CI quality gates, and separation of duties support auditable operations. | **Secure configuration, continuous monitoring, and software supply-chain hygiene** across build/test/deploy lifecycle. | **Patch operating systems**, **Patch applications**, **Multi-factor authentication**, and **Restrict administrative privileges** for hardened delivery pipelines. |
+
 ## Quick Start
 
 ### 1) Prerequisites
@@ -125,7 +136,7 @@ Install the following tools:
 
 ```bash
 git clone <your-repo-url>
-cd JP-Morgan-Project-Software-Engineering
+cd Intent-to-Auditable-Trust-Object
 ```
 
 ### 3) Create and activate a virtual environment
