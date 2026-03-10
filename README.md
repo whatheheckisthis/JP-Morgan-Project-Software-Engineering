@@ -31,7 +31,7 @@ Principal Component Analysis (PCA) is the central dimensionality-reduction techn
 - **Risk Profiling**: Characterizing individuals, groups, or departments by behavioral and financial risk indicators.
 - **Reproducibility**: The ability to rerun the same workflow and obtain consistent results with documented parameters.
 
-## Workflow (ASCII)
+## Workflow 
 
 ```text
 +------------------+       +-------------------------+       +----------------------+
@@ -68,7 +68,7 @@ The pipeline is organized as a coherent system spanning:
 
 The architecture treats **NLP-derived communication signals** and **quantitative financial signals** as complementary views of the same underlying organizational behavior.
 
-## Why PCA Is Central in This Repository
+## Why PCA Is Central?
 
 PCA is applied as a core preprocessing step to:
 
@@ -77,7 +77,7 @@ PCA is applied as a core preprocessing step to:
 - Reduce multicollinearity before downstream modeling and scoring
 - Support stable, explainable, and repeatable analysis workflows
 
-## Downstream Analytics Objectives
+## Downstream Analytics
 
 Built on top of ingestion + feature engineering + PCA, the repository supports:
 
@@ -110,7 +110,7 @@ ci/         # CI configuration mirrors and pipeline assets
 - **Notebook-driven analysis** for exploratory finance and NLP tasks
 - **ITIL 4 / SecDevOps-aligned structure** for governance and maintainability
 
-## Core Capabilities → Controls Mapping 
+## Controls Mapping 
 
 > This mapping is a governance alignment aid for engineering teams and audit preparation. It is not a formal certification statement.
 > Control references below are **spec identifiers** to support traceability; validate against the exact release/version used by your compliance program.
