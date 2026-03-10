@@ -110,6 +110,18 @@ ci/         # CI configuration mirrors and pipeline assets
 - **Notebook-driven analysis** for exploratory finance and NLP tasks
 - **ITIL 4 / SecDevOps-aligned structure** for governance and maintainability
 
+## Core Capabilities → Controls Mapping (SOC 2, ISM, Essential Eight ML4)
+
+> This mapping is a governance alignment aid for engineering teams and audit preparation. It is not a formal certification statement.
+> Control references below are **spec identifiers** to support traceability; validate against the exact release/version used by your compliance program.
+
+| Core capability | SOC 2 control spec numbers (TSC) | ISM control spec reference | Essential Eight spec reference (ML4) |
+|---|---|---|---|
+| Outlier management and data-quality cleaning | **PI1.1, PI1.2, PI1.3** (processing completeness/accuracy/timeliness); supporting **CC7.2** (anomaly detection/monitoring). | **ISM controls catalogue: System/Information Integrity + Event Logging** control IDs (org-selected baseline). | **M3 Restrict Admin Privileges**, **M4 Patch Applications**, **M8 Regular Backups** at **Maturity Level 4**. |
+| Email parsing and stemming pipelines | **CC6.1, CC6.2, CC6.3** (logical access), **C1.1** (confidentiality protection), supporting **CC7.1** (security monitoring). | **ISM controls catalogue: Access Control + Data Protection** control IDs (org-selected baseline). | **M1 Application Control**, **M5 MFA**, **M6 User Application Hardening** at **Maturity Level 4**. |
+| Notebook-driven analysis and reproducible research | **CC8.1** (change management), **CC2.3** (accountability/oversight), supporting **PI1.4** (error correction). | **ISM controls catalogue: Secure Development + Audit/Logging** control IDs (org-selected baseline). | **M1 Application Control**, **M7 Macro Controls** (where Office is in scope), **M8 Regular Backups** at **Maturity Level 4**. |
+| ITIL 4 / SecDevOps-aligned repository and CI structure | **CC5.2, CC5.3** (control activities), **CC7.3, CC7.4** (monitoring/remediation), **CC8.1** (change lifecycle). | **ISM controls catalogue: Secure Configuration + Continuous Monitoring + Supply Chain** control IDs (org-selected baseline). | **M2 Patch Operating Systems**, **M4 Patch Applications**, **M5 MFA**, **M3 Restrict Admin Privileges** at **Maturity Level 4**. |
+
 ## Quick Start
 
 ### 1) Prerequisites
@@ -124,8 +136,8 @@ Install the following tools:
 ### 2) Clone the repository
 
 ```bash
-git clone <your-repo-url>
-cd JP-Morgan-Project-Software-Engineering
+git clone https://github.com/<your-username>/Intent-to-Auditable-Trust-Object.git
+cd Intent-to-Auditable-Trust-Object
 ```
 
 ### 3) Create and activate a virtual environment
