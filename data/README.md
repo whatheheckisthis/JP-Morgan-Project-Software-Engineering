@@ -20,3 +20,10 @@ This repository keeps runtime datasets outside version control when they are lar
 - Keep personally sensitive data out of Git history.
 - Prefer checksums and reproducible scripts for data lineage.
 - Use synthetic fixtures in tests instead of full corporate datasets.
+
+
+## JPM case-management corpus
+
+- Enterprise artifact ingestion location: `data/raw/jp_morgan_case_management/`.
+- Required artifact contract: `data/raw/jp_morgan_case_management/artifact_manifest.csv`.
+- Architecture detail: `docs/architecture/wiser_architecture.md`.
