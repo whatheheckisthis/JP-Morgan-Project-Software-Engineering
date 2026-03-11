@@ -1,0 +1,9 @@
+artifact_group,artifact_file_pattern,required,description
+case_headers,case_headers_*.csv,true,Case metadata including ids owners status and severity
+case_events,case_events_*.csv,true,Timeline events and workflow transitions
+entity_links,entity_links_*.csv,true,Case-linked people accounts and organizations
+alert_decisions,alert_decisions_*.csv,true,Analyst adjudication outcomes and labels
+attachment_metadata,attachments_*.csv,true,Document metadata hashes types and retention tags
+audit_trails,audit_trail_*.csv,true,Action-level audit logs with actor and timestamp
+watchlist_snapshots,watchlist_snapshot_*.csv,false,Sanctions/watchlist decision snapshots
+dispositions,dispositions_*.csv,true,Final disposition and remediation closure outcomes
