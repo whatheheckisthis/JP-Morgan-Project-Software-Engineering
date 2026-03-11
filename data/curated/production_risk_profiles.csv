@@ -1,0 +1,9 @@
+employee_id,anomaly_score,risk_band
+E1003,2.8124,high
+E1007,2.3019,high
+E1005,1.7642,medium
+E1001,1.4027,medium
+E1002,0.9820,medium
+E1004,0.6113,low
+E1006,0.4529,low
+E1008,0.3971,low
