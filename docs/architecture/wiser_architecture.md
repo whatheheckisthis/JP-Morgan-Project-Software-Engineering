@@ -19,6 +19,9 @@ This document provides an exhaustive architecture inventory for the repository a
 6. **Validation & governance layer**
    - `src/pipeline/validation.cpp` emits run-level validation status.
    - Curated profiles are stored for downstream governance reporting.
+7. **Cryptography and key management layer**
+   - `src/security/crypto.c` exposes cryptographic primitives for integrity and key lifecycle operations.
+   - Mbed TLS + PSA Crypto is enabled through `mbedtls_config.h` and `psa_crypto_config.h`.
 
 ## 2) Component inventory
 
@@ -80,3 +83,13 @@ Expected artifact categories:
 - Curated outputs are deterministic and auditable.
 - Validation summary enforces row-count consistency across major stages.
 - Artifact manifest enforces minimum required corpus completeness for enterprise ingest.
+
+
+## 6) Cryptographic profile
+
+- Hashing: SHA-256 via Mbed TLS (`mbedtls_sha256_ret`) when `ENRON_USE_MBEDTLS` is enabled.
+- Key storage: PSA Crypto key import/destroy lifecycle (`psa_import_key`, `psa_destroy_key`).
+- Configuration: repository-local feature flags under `src/security/mbedtls_config.h` and `src/security/psa_crypto_config.h`.
+- Fallback mode: deterministic non-cryptographic implementation for environments without Mbed TLS headers/libraries.
+
+- Edwards-curve mitigation: Ed25519 key generation/sign/verify via PSA Crypto to harden integrity/authenticity controls for sensitive artifacts.
