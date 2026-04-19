@@ -1,0 +1,3 @@
+entity_id,entity_type,canonical_name,source_ref
+E001,person,Jane Doe,enron:jane.doe@corp.example
+E002,counterparty,Acme Financial LLC,financial:counterparty:acme-financial

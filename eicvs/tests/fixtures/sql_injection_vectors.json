@@ -1,0 +1,12 @@
+{
+  "class": "sql_injection",
+  "positive": [
+    {"id": "sqli-001", "input": "' OR 1=1 --", "expected": "BLOCK"}
+  ],
+  "negative": [
+    {"id": "sqli-002", "input": "employee_id=42", "expected": "ALLOW"}
+  ],
+  "edge": [
+    {"id": "sqli-003", "input": "name=O''Reilly", "expected": "ALLOW"}
+  ]
+}
