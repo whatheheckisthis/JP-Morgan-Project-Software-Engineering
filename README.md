@@ -1,226 +1,310 @@
-# Intent-to-Auditable-Trust-Object (IATO)
-From raw emails to risk signals — a full-lifecycle analytics pipeline over the Enron corpus using PCA, NLP, and quantitative methods for anomaly detection, profiling, and reproducible validation.
+# Assurance Engineering Portfolio
+## Deterministic Control Validation and Behavioural Analytics — v1.0.0
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)](https://docs.pytest.org/)
-[![Security](https://img.shields.io/badge/security-OpenSSL-721412?logo=openssl&logoColor=white)](https://www.openssl.org/)
-[![Container](https://img.shields.io/badge/container-Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+---
 
+## Overview
 
-## Executive Summary
+This repository contains two formally specified, implementation-ready engineering systems developed as part of an independent assurance practice. Both systems are designed for auditability, deterministic execution, and direct translation into software components without requiring design inference.
 
-This repository started as a broad JPMC-context resource collection and matured into a structured, reproducible analytics pipeline built around the Enron email and financial corpus. The project integrates NLP over communication data with quantitative analysis over financial records to produce a unified behavioral risk lens.
+The first system — the **Exploit-Informed Control Validation System (EICVS)** — is a structured vulnerability class evaluation engine that maps known exploit patterns to OWASP control frameworks and emits cryptographically chained evidence records. The second — the **Behavioural Analytics Pipeline (BAP)** — is a multi-source analytics pipeline that ingests email and financial data, engineers behavioural features, applies dimensionality reduction and anomaly detection, and produces governance-ready audit outputs.
 
-Principal Component Analysis (PCA) is the central dimensionality-reduction technique used to compress noisy, high-dimensional features into interpretable components that preserve the most meaningful variance. This foundation supports downstream anomaly detection, risk profiling, and governance-focused analytics in regulated environments.
+Both systems share the same foundational design commitments: bounded execution, no network access beyond what is strictly declared, append-only or write-once output artefacts, fail-fast error semantics, and full determinism given identical inputs. Neither system remediates, advises, or infers. Both evaluate, map, and record.
 
-## Project Objectives
+---
 
-1. Build a repeatable end-to-end pipeline from ingestion to validated outputs.
-2. Combine email-language and financial signals to model organizational behavior.
-3. Use PCA to improve interpretability and reduce multicollinearity before modeling.
-4. Enable risk-focused use cases such as anomaly detection and entity profiling.
-5. Preserve auditability, traceability, and security hygiene for compliance-heavy contexts.
+## Repository Structure
 
-## Definitions
-
-- **Corpus**: The combined Enron email and financial datasets used for analysis.
-- **NLP (Natural Language Processing)**: Techniques used to parse, normalize, and extract signal from text communication.
-- **Feature Engineering**: Transforming raw records into model-ready variables.
-- **PCA (Principal Component Analysis)**: A dimensionality-reduction method that projects features into orthogonal components ordered by explained variance.
-- **Anomaly Detection**: Identifying unusual communication or transaction patterns relative to baseline behavior.
-- **Risk Profiling**: Characterizing individuals, groups, or departments by behavioral and financial risk indicators.
-- **Reproducibility**: The ability to rerun the same workflow and obtain consistent results with documented parameters.
-
-## Workflow 
-
-```text
-+------------------+       +-------------------------+       +----------------------+
-| Data Sources     | ----> | Ingestion & Normalization| ---> | Feature Engineering  |
-| - Enron Emails   |       | - Schema alignment       |       | - NLP features       |
-| - Financial Data |       | - Cleaning/typing        |       | - Financial features |
-+------------------+       +-------------------------+       +----------------------+
-                                                                     |
-                                                                     v
-                                                           +----------------------+
-                                                           | Dimensionality        |
-                                                           | Reduction (PCA)       |
-                                                           | - Variance isolation  |
-                                                           | - Collinearity cut    |
-                                                           +----------------------+
-                                                                     |
-                                                                     v
-+------------------+       +-------------------------+       +----------------------+
-| Validation       | <---- | Modeling & Scoring      | ----> | Outputs              |
-| - Tests/checks   |       | - Anomaly detection     |       | - Risk profiles      |
-| - Parameter logs |       | - Behavior segmentation |       | - Alert candidates   |
-+------------------+       +-------------------------+       | - Governance reports |
-                                                              +----------------------+
+```
+.
+├── README.md
+│
+├── eicvs/                              # Exploit-Informed Control Validation System
+│   ├── proto/                          # Protobuf trace schemas per vulnerability class
+│   ├── services/trace/                 # Fixture targets and trace capture modules
+│   ├── tests/
+│   │   ├── fixtures/                   # Static versioned test vectors (JSON)
+│   │   └── asvs/                       # Control assertion test suites
+│   ├── evidence/
+│   │   ├── evidence_ledger.py          # Append-only SHA-256-chained ledger
+│   │   └── evidence_gap_register.csv   # Control coverage gap register
+│   ├── reports/                        # JUnit XML control matrix outputs (generated)
+│   ├── sdlc/                           # Threat models, control designs, test plans
+│   └── Makefile
+│
+├── bap/                                # Behavioural Analytics Pipeline
+│   ├── data/
+│   │   ├── sources/enron/              # Pre-staged Enron corpus (read-only)
+│   │   ├── sources/financial/          # Pre-staged financial records (read-only)
+│   │   └── entity_map.csv              # Entity resolution table
+│   ├── src/
+│   │   ├── pipeline.py                 # Stage orchestrator
+│   │   ├── ingestor.py
+│   │   ├── normaliser.py
+│   │   ├── feature_engineer.py
+│   │   ├── dimensionality_reducer.py
+│   │   ├── modelling_engine.py
+│   │   ├── validation_controller.py
+│   │   ├── output_emitter.py
+│   │   └── exceptions.py
+│   ├── tests/
+│   │   ├── test_pipeline.py
+│   │   └── fixtures/                   # Minimal valid test inputs
+│   └── outputs/                        # Run-scoped output directories (generated)
+│
+├── codex/
+│   ├── EICVS_codex_prompt.md           # Formal implementation contract for EICVS
+│   └── BAP_codex_prompt.md             # Formal implementation contract for BAP
+│
+└── docs/
+    └── architecture.md
 ```
 
-## Project Overview
+---
 
-The pipeline is organized as a coherent system spanning:
+## System One — Exploit-Informed Control Validation System (EICVS)
 
-- Data ingestion
-- Feature engineering
-- Exploratory analysis
-- Reproducible validation workflows
+### What It Is
 
-The architecture treats **NLP-derived communication signals** and **quantitative financial signals** as complementary views of the same underlying organizational behavior.
+EICVS is a deterministic, fixture-bounded, multi-class control validation architecture. It accepts structured representations of known vulnerability classes as typed test vectors, evaluates them against explicit rule sets, maps detected violations to OWASP ASVS 4.0.3 and OWASP Top 10 2021 controls, and emits append-only, SHA-256-chained evidence records. Every state transition is declared, typed, and auditable.
 
-## Why PCA Is Central?
+The system does not execute exploit code. It does not scan live systems. It does not connect to any external service. It does not remediate. It evaluates, maps, and records.
 
-PCA is applied as a core preprocessing step to:
+### Vulnerability Classes
 
-- Isolate high-variance behavioral and financial signals from noisy, high-dimensional inputs
-- Improve model interpretability by reducing feature space complexity
-- Reduce multicollinearity before downstream modeling and scoring
-- Support stable, explainable, and repeatable analysis workflows
+| Class | OWASP Top 10 | ASVS Chapter |
+|---|---|---|
+| `auth` | A07:2021 | V2 |
+| `ssrf` | A10:2021 | V10 |
+| `deserialization` | A08:2021 | V5 |
+| `supply_chain` | A08:2021 | V10 |
+| `iam` | A01:2021 | V4 |
 
-## Downstream Analytics
+### Pipeline
 
-Built on top of ingestion + feature engineering + PCA, the repository supports:
+Each vulnerability class traverses a six-stage pipeline. Stages are not skippable. Failure at any stage halts the pipeline for that invocation with no fallback.
 
-- **Anomaly detection** across communication and transaction patterns
-- **Risk-focused profiling** of individuals and departments
-- **Security-aware governance** in regulated and compliance-heavy settings
-- **Institutional forensics** and behavioral analytics use cases beyond Enron
-
-## Reproducibility and Validation
-
-The repository is designed to be reproducible by default:
-
-- Validation steps are documented and executable
-- Key workflows are parameterized for reruns
-- Project structure supports repeatability across similar datasets
-
-## Repository Layout
-
-```text
-src/        # reusable analytics and NLP modules
-tests/      # unit and integration checks
-docs/       # notebooks and reference documentation
-ci/         # CI configuration mirrors and pipeline assets
+```
+Stage 0   VECTOR_INGESTION          JSON test vector → validated typed request object
+Stage 1   FIXTURE_DISPATCH          Request → deterministic analysis object
+Stage 2   TRACE_CAPTURE             Request + analysis → typed trace record
+Stage 3   CONTROL_MAPPING           Analysis → ControlTrigger list
+Stage 4   DETERMINISTIC_VERIFICATION Trace + vectors → pytest result set + JUnit XML
+Stage 5   EVIDENCE_EMISSION         Trace + result → appended EvidenceRecord
 ```
 
-## Core Capabilities
+### Evidence Ledger
 
-- **Outlier management** utilities for regression-style workflows
-- **Email parsing and stemming** for text analytics pipelines
-- **Notebook-driven analysis** for exploratory finance and NLP tasks
-- **ITIL 4 / SecDevOps-aligned structure** for governance and maintainability
+Every evaluation emits exactly one `EvidenceRecord` to `evidence/evidence_ledger.csv`. The ledger is append-only. No record may be modified or deleted after write. Each record's `record_id` is a SHA-256 function of `(previous_record_id, input_fp, timestamp_ns)`, forming a verifiable chain across all pipeline classes and all invocations.
 
-## Core Capabilities → Controls Mapping (SOC 2, ISM, Essential Eight ML4)
+```
+record_id = SHA-256(previous_record_id || input_fp || timestamp_ns)
+```
 
-> This mapping is a governance alignment aid for engineering teams and audit preparation. It is not a formal certification statement.
-> Control references below are **spec identifiers** to support traceability; validate against the exact release/version used by your compliance program.
+Chain integrity is verifiable at any time without the original input vectors:
 
-| Core capability | SOC 2 control spec numbers (TSC) | ISM control spec reference | Essential Eight spec reference (ML4) |
-|---|---|---|---|
-| Outlier management and data-quality cleaning | **PI1.1, PI1.2, PI1.3** (processing completeness/accuracy/timeliness); supporting **CC7.2** (anomaly detection/monitoring). | **ISM controls catalogue: System/Information Integrity + Event Logging** control IDs (org-selected baseline). | **M3 Restrict Admin Privileges**, **M4 Patch Applications**, **M8 Regular Backups** at **Maturity Level 4**. |
-| Email parsing and stemming pipelines | **CC6.1, CC6.2, CC6.3** (logical access), **C1.1** (confidentiality protection), supporting **CC7.1** (security monitoring). | **ISM controls catalogue: Access Control + Data Protection** control IDs (org-selected baseline). | **M1 Application Control**, **M5 MFA**, **M6 User Application Hardening** at **Maturity Level 4**. |
-| Notebook-driven analysis and reproducible research | **CC8.1** (change management), **CC2.3** (accountability/oversight), supporting **PI1.4** (error correction). | **ISM controls catalogue: Secure Development + Audit/Logging** control IDs (org-selected baseline). | **M1 Application Control**, **M7 Macro Controls** (where Office is in scope), **M8 Regular Backups** at **Maturity Level 4**. |
-| ITIL 4 / SecDevOps-aligned repository and CI structure | **CC5.2, CC5.3** (control activities), **CC7.3, CC7.4** (monitoring/remediation), **CC8.1** (change lifecycle). | **ISM controls catalogue: Secure Configuration + Continuous Monitoring + Supply Chain** control IDs (org-selected baseline). | **M2 Patch Operating Systems**, **M4 Patch Applications**, **M5 MFA**, **M3 Restrict Admin Privileges** at **Maturity Level 4**. |
+```
+make verify-chain
+```
 
-## Quick Start
+### Control Mapping
 
-### 1) Prerequisites
+Control mappings are not looked up at runtime and not loaded from configuration. They are encoded as explicit conditional branches in each fixture's `_map_controls()` method. Every violation-indicating analysis field maps to one or more `ControlTrigger` records, each carrying an exact ASVS control ID and an exact OWASP Top 10 item. An unmapped field is a hard pipeline failure, not a silent omission.
 
-Install the following tools:
-
-- Python 3.10+
-- pip
-- OpenSSL (optional but recommended for integrity checks)
-- Docker Desktop or Docker Engine (optional, for containerized execution)
-
-### 2) Clone the repository
+### Running
 
 ```bash
-git clone https://github.com/<whatheheckisthis>/Intent-to-Auditable-Trust-Object.git
-cd Intent-to-Auditable-Trust-Object
+# Run a single class
+make auth
+
+# Run all classes
+make all
+
+# Verify ledger chain integrity
+make verify-chain
+
+# Check for blocking coverage gaps
+make audit-gate
+
+# Report all open gaps
+make gap-check
 ```
 
-### 3) Create and activate a virtual environment
+### Adding a New Vulnerability Class
+
+A class is not deployable until all of the following are committed:
+
+- `proto/<class_id>_trace.proto` with all required message types
+- `tests/fixtures/<class_id>_vectors.json` with `positive[]`, `negative[]`, and `edge[]` vectors
+- `services/trace/fixture_<class_id>_target.py` with `_map_controls()` fully enumerated
+- `services/trace/capture_<class_id>.py`
+- `tests/asvs/test_<class_id>_controls.py` with all required test functions
+- All unmapped controls registered in `evidence/evidence_gap_register.csv`
+- `sdlc/<class_id>/threat_model.md`, `control_design.md`, `test_plan.md`
+- Makefile target for `<class_id>`
+
+Partial class definitions are not deployable. The CI audit gate enforces this via gap register checks.
+
+### Key Constraints
+
+- Network binding is restricted to `127.0.0.1`. Any socket opened to an external address is a security defect, not a configuration error.
+- Payload field values are never executed as code, passed to `eval()` or `exec()`, or deserialised into a live object graph.
+- All evaluation functions are pure. Identical input produces identical output on every invocation.
+- Test vectors are static, version-controlled JSON files. No vector may be generated at runtime.
+- `xfail` markers are prohibited on control assertion tests. Fail-fast is enforced at both the pipeline and test layers.
+
+---
+
+## System Two — Behavioural Analytics Pipeline (BAP)
+
+### What It Is
+
+BAP is a multi-stage behavioural analytics pipeline that ingests heterogeneous source data — Enron email corpus and financial transaction records — normalises it through schema alignment and type enforcement, derives NLP and financial features per entity, applies PCA-based dimensionality reduction for variance isolation and collinearity elimination, and routes the reduced feature space through anomaly detection and behaviour segmentation models to produce risk profiles, alert candidates, and governance-ready audit reports. A validation controller operates as a parallel control layer across the modelling stage.
+
+The pipeline does not connect to external systems. It does not fetch data at runtime. It does not produce remediation advice. It does not run persistently. Each invocation is bounded and terminates.
+
+### Pipeline
+
+The pipeline is a seven-stage finite state machine. Stages are not skippable. Failure at any stage halts the pipeline for that invocation.
+
+```
+Stage 0   SOURCE_INGESTION          Raw files → typed dataframes
+Stage 1   NORMALISATION             Dataframes → schema-aligned, typed, derived-field dataframes
+Stage 2   FEATURE_ENGINEERING       Normalised data → FeatureMatrix (one row per entity)
+Stage 3   DIMENSIONALITY_REDUCTION  FeatureMatrix → ReducedFeatureMatrix + PCAMetadata
+Stage 4   MODELLING_AND_SCORING     ReducedFeatureMatrix → ScoredEntityFrame
+Stage 5   VALIDATION                All intermediate outputs → ValidationResult + logs
+Stage 6   OUTPUT_EMISSION           ScoredEntityFrame + ValidationResult → five output files
+```
+
+### Input Sources
+
+| Source | Format | Path |
+|---|---|---|
+| Enron email corpus | CSV / structured export | `data/sources/enron/` |
+| Financial transaction records | CSV / typed tabular | `data/sources/financial/` |
+| Entity resolution map | CSV | `data/entity_map.csv` |
+
+All input data is pre-staged. No runtime data fetch is permitted. Source files are opened in read-only mode. No source file is modified by the pipeline.
+
+### Feature Engineering
+
+NLP features and financial features are derived per `entity_id` and assembled into a typed `FeatureMatrix`. All null values are resolved to typed zero before the matrix is passed downstream. No `NaN` value is permitted in the `FeatureMatrix` output.
+
+NLP features include email volume, average recipient count, after-hours send ratio, subject entropy, body word count, unique recipient ratio, and keyword watchlist hit count.
+
+Financial features include transaction volume, absolute transaction total, average transaction amount, amount standard deviation, large transaction ratio, unique counterparty count, and debit-to-credit ratio.
+
+All feature derivation constants — keyword watchlist, business hours range, large transaction threshold, rolling window — are declared as module-level `Final` values. Runtime modification is prohibited.
+
+### Dimensionality Reduction
+
+PCA is applied after collinearity removal and standard scaling. Zero-variance columns are dropped before scaling. Columns with pairwise Pearson correlation above `COLLINEARITY_THRESHOLD` are reduced by retaining the first column in each correlated pair. `PCA_RANDOM_STATE` is a declared constant, ensuring reproducibility across invocations.
+
+All dropped columns and PCA parameters are recorded in a `PCAMetadata` record that is carried through to the governance report.
+
+### Modelling
+
+Two models are applied to the reduced feature space:
+
+**Anomaly Detection** uses Isolation Forest. Each entity receives an `anomaly_score` (raw decision function output) and an `anomaly_flag` (boolean). All hyperparameters — `IF_N_ESTIMATORS`, `IF_MAX_SAMPLES`, `IF_CONTAMINATION`, `IF_RANDOM_STATE` — are declared `Final` constants.
+
+**Behaviour Segmentation** uses K-Means clustering. Each entity receives a `segment_label` (integer cluster assignment). All hyperparameters — `KM_N_CLUSTERS`, `KM_MAX_ITER`, `KM_N_INIT`, `KM_RANDOM_STATE` — are declared `Final` constants.
+
+Model artefacts are not persisted to the filesystem. The scored output is the deliverable.
+
+### Validation
+
+The validation controller runs eight checks against all intermediate and final outputs before emission. Seven are halting: a failed check raises `ValidationError` and exits the pipeline non-zero. One is advisory: a warning is written to `validation_log` and execution continues.
+
+| Check | Type | Assertion |
+|---|---|---|
+| CHECK-VAL-01 | Halting | Every entity in FeatureMatrix is present in ScoredEntityFrame |
+| CHECK-VAL-02 | Halting | All anomaly scores are finite float64 |
+| CHECK-VAL-03 | Halting | All segment labels are in `[0, KM_N_CLUSTERS - 1]` |
+| CHECK-VAL-04 | Halting | `anomaly_flag` column contains only boolean values |
+| CHECK-VAL-05 | Halting | PCA cumulative variance ≥ `PCA_MIN_CUMULATIVE_VARIANCE` |
+| CHECK-VAL-06 | Halting | FeatureMatrix contains no NaN (independent re-assertion) |
+| CHECK-VAL-07 | Advisory | Anomaly rate is within declared bounds |
+| CHECK-VAL-08 | Halting | Parameter log contains entries for all declared constants |
+
+### Outputs
+
+All outputs are written to `outputs/<run_id>/`. The `run_id` is computed once at pipeline start as `YYYYMMDD_HHMMSS_<sha256_of_inputs[:8]>` and is used across all output filenames. No output file is opened in append mode. Prior run directories are not modified.
+
+| File | Content |
+|---|---|
+| `risk_profiles.<run_id>.csv` | Scored record for every entity |
+| `alert_candidates.<run_id>.csv` | Subset where `anomaly_flag == True`, ordered by `abs(anomaly_score)` descending |
+| `governance_report.<run_id>.json` | Run metadata, PCA parameters, validation summary, model version |
+| `validation_log.<run_id>.json` | Per-check results and messages |
+| `parameter_log.<run_id>.json` | All declared constants serialised at run time |
+
+### Running
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+# Run the full pipeline
+make run
+
+# Run the test suite
+make test
+
+# Remove generated outputs (does not touch data/ or src/)
+make clean
 ```
 
-Windows CMD:
+### Key Constraints
 
-```cmd
-python -m venv .venv
-.venv\Scripts\activate
-```
+- No network socket is opened at any stage under any condition.
+- No ingested field value is passed to `eval()`, `exec()`, `pickle.loads()`, or any equivalent.
+- All module-level `Final` constants are set at module load time. Runtime modification is prohibited.
+- No `try/except` block in validation code suppresses a `ValidationError`.
+- Two independent runs with identical input produce output files with identical feature values, anomaly scores, segment labels, and check results. `run_id`, `timestamp_utc`, and derived filenames will differ.
 
-### 4) Install runtime and test dependencies
+---
 
-```bash
-python -m pip install --upgrade pip
-pip install pytest nltk
-```
+## Design Commitments (Both Systems)
 
-### 5) Run automated tests
+Both systems are built on the same set of non-negotiable design properties.
 
-```bash
-pytest -q
-```
+**Determinism.** Given identical inputs and identical declared constants, both systems produce identical outputs. No evaluation logic depends on wall-clock time, random state, environment variables, or external system responses.
 
-## OpenSSL Usage (Integrity / Security)
+**Fail-fast.** Any condition that cannot be handled by an explicitly declared error path halts the pipeline immediately. Silent error suppression — bare `except`, catch-all fallback, default return on exception — is prohibited in all forms across both systems.
 
-### Generate SHA-256 checksum
+**No implicit behaviour.** No module takes any action not declared in its specification. This includes logging (named logger only; not stdout), file writes, and state mutations.
 
-```bash
-openssl dgst -sha256 path/to/file
-```
+**Bounded output scope.** All filesystem writes during execution are scoped to declared output paths. No write occurs outside those paths.
 
-### Verify a known checksum
+**No autonomous operation.** Neither system schedules itself, responds to events, or takes any action without being explicitly invoked.
 
-```bash
-echo "<expected_sha256>  path/to/file" | sha256sum -c -
-```
+**Reproducibility.** Any output produced by either system can be reproduced from the same input, yielding records with identical content fingerprints and identical control or model evaluation results.
 
-## Docker Usage
+---
 
-```bash
-docker run --rm -it \
-  -v "${PWD}:/workspace" \
-  -w /workspace \
-  python:3.11-slim \
-  bash -lc "pip install -U pip pytest nltk && pytest -q"
-```
+## Codex Implementation Contracts
 
-Windows CMD variant:
+Formal implementation contracts for both systems are provided in `codex/`. Each contract defines the full system as a set of bounded modules with explicit inputs, outputs, function contracts, data schemas, error conditions, and global invariants. They are written for direct translation into software components without requiring interpretation or design inference.
 
-```cmd
-docker run --rm -it -v "%cd%:/workspace" -w /workspace python:3.11-slim bash -lc "pip install -U pip pytest nltk && pytest -q"
-```
+| Contract | Path |
+|---|---|
+| EICVS | `codex/EICVS_codex_prompt.md` |
+| BAP | `codex/BAP_codex_prompt.md` |
 
-## Governance Notes
+---
 
-The repository organization reflects ITIL 4 and SecDevOps practices:
+## Versioning
 
-- Clear separation between production logic (`src`) and verification (`tests`)
-- Dedicated documentation surface (`docs`) for analysis traceability
-- CI artifacts under `ci` to support control visibility
+| Artefact | Version |
+|---|---|
+| OWASP ASVS (EICVS) | 4.0.3 |
+| OWASP Top 10 (EICVS) | 2021 |
+| EICVS schema | 1.0.0 |
+| BAP schema | 1.0.0 |
 
-For additional context, see `docs/itil4_secdevops_refactor.md`.
+Version constants are declared as module-level `Final[str]` values in each module. Any change to a version constant requires updated mapping verification, a new gap register entry for newly introduced controls, and a commit message referencing the version change.
 
-## Contributing
+---
 
-1. Fork the repository and create a focused feature branch
-2. Keep changes scoped with clear commit messages
-3. Run the test suite locally before opening a pull request
-4. Open a pull request with a concise change summary and validation notes
+## Status
 
-## Security
-
-If you discover a potential security issue, report it responsibly and avoid posting sensitive details in public issues.
-
-Local development hygiene:
-
-- Validate downloaded files with checksums
-- Keep dependencies updated
-- Avoid committing secrets or keys
-- Use environment variables for sensitive configuration
+Both systems are in active specification. Implementation targets are sequenced against formal accreditation milestones. The EICVS codex contract is complete. The BAP codex contract is complete. Stub constant population for BAP is pending domain value decisions (`KEYWORD_WATCHLIST`, `LARGE_TXN_THRESHOLD`, `COLLINEARITY_THRESHOLD`, `IF_CONTAMINATION`, `KM_N_CLUSTERS`).
