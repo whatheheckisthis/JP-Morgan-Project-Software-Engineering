@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package eicvs.iam;
+
+message IamRequest {
+  string vector_id = 1;
+  bool role_hierarchy_allows_escalation = 2;
+  bool resource_access_control_present = 3;
+}
+
+message IamTrace {
+  IamRequest request = 1;
+  bool privilege_escalation_path_present = 2;
+  bool missing_access_control_on_resource = 3;
+  int64 timestamp_ns = 4;
+}

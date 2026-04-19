@@ -1,0 +1,58 @@
+{
+  "class_id": "supply_chain",
+  "schema_version": "1.0.0",
+  "positive": [
+    {
+      "id": "supply_chain_pos_001",
+      "description": "Unsigned and unpinned dependency",
+      "payload": {
+        "signature_verified": false,
+        "version_pinned": false
+      }
+    },
+    {
+      "id": "supply_chain_pos_002",
+      "description": "Unsigned dependency accepted",
+      "payload": {
+        "signature_verified": false,
+        "version_pinned": true
+      }
+    }
+  ],
+  "negative": [
+    {
+      "id": "supply_chain_neg_001",
+      "description": "Signed and pinned dependency",
+      "payload": {
+        "signature_verified": true,
+        "version_pinned": true
+      }
+    },
+    {
+      "id": "supply_chain_neg_002",
+      "description": "Signed and pinned alternate",
+      "payload": {
+        "signature_verified": true,
+        "version_pinned": true
+      }
+    }
+  ],
+  "edge": [
+    {
+      "id": "supply_chain_edg_001",
+      "description": "Signed but unpinned dependency",
+      "payload": {
+        "signature_verified": true,
+        "version_pinned": false
+      }
+    },
+    {
+      "id": "supply_chain_edg_002",
+      "description": "Unsigned but pinned dependency",
+      "payload": {
+        "signature_verified": false,
+        "version_pinned": true
+      }
+    }
+  ]
+}

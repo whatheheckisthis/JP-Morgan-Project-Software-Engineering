@@ -1,0 +1,58 @@
+{
+  "class_id": "iam",
+  "schema_version": "1.0.0",
+  "positive": [
+    {
+      "id": "iam_pos_001",
+      "description": "Escalation path and missing ACL",
+      "payload": {
+        "role_hierarchy_allows_escalation": true,
+        "resource_access_control_present": false
+      }
+    },
+    {
+      "id": "iam_pos_002",
+      "description": "Escalation path exists",
+      "payload": {
+        "role_hierarchy_allows_escalation": true,
+        "resource_access_control_present": true
+      }
+    }
+  ],
+  "negative": [
+    {
+      "id": "iam_neg_001",
+      "description": "No escalation with ACL",
+      "payload": {
+        "role_hierarchy_allows_escalation": false,
+        "resource_access_control_present": true
+      }
+    },
+    {
+      "id": "iam_neg_002",
+      "description": "No escalation with ACL second path",
+      "payload": {
+        "role_hierarchy_allows_escalation": false,
+        "resource_access_control_present": true
+      }
+    }
+  ],
+  "edge": [
+    {
+      "id": "iam_edg_001",
+      "description": "No escalation but ACL missing",
+      "payload": {
+        "role_hierarchy_allows_escalation": false,
+        "resource_access_control_present": false
+      }
+    },
+    {
+      "id": "iam_edg_002",
+      "description": "Escalation with ACL in place",
+      "payload": {
+        "role_hierarchy_allows_escalation": true,
+        "resource_access_control_present": true
+      }
+    }
+  ]
+}

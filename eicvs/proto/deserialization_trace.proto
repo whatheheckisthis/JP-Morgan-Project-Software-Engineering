@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package eicvs.deserialization;
+
+message DeserializationRequest {
+  string vector_id = 1;
+  bool source_trusted = 2;
+  bool coercion_guard_enabled = 3;
+  string type_name = 4;
+}
+
+message DeserializationTrace {
+  DeserializationRequest request = 1;
+  bool untrusted_object_deserialised = 2;
+  bool type_coercion_bypass_detected = 3;
+  int64 timestamp_ns = 4;
+}
