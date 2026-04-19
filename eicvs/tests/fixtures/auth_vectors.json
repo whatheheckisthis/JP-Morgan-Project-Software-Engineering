@@ -1,0 +1,58 @@
+{
+  "class_id": "auth",
+  "schema_version": "1.0.0",
+  "positive": [
+    {
+      "id": "auth_pos_001",
+      "description": "Weak credential and no MFA",
+      "payload": {
+        "credential_strength": "weak",
+        "mfa_present": false
+      }
+    },
+    {
+      "id": "auth_pos_002",
+      "description": "Very weak credential with MFA",
+      "payload": {
+        "credential_strength": "very_weak",
+        "mfa_present": true
+      }
+    }
+  ],
+  "negative": [
+    {
+      "id": "auth_neg_001",
+      "description": "Strong credential and MFA",
+      "payload": {
+        "credential_strength": "strong",
+        "mfa_present": true
+      }
+    },
+    {
+      "id": "auth_neg_002",
+      "description": "Medium credential and MFA",
+      "payload": {
+        "credential_strength": "medium",
+        "mfa_present": true
+      }
+    }
+  ],
+  "edge": [
+    {
+      "id": "auth_edg_001",
+      "description": "Weak credential with MFA",
+      "payload": {
+        "credential_strength": "weak",
+        "mfa_present": true
+      }
+    },
+    {
+      "id": "auth_edg_002",
+      "description": "Strong credential without MFA",
+      "payload": {
+        "credential_strength": "strong",
+        "mfa_present": false
+      }
+    }
+  ]
+}

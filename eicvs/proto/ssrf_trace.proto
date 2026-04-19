@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package eicvs.ssrf;
+
+message SsrfRequest {
+  string vector_id = 1;
+  string target_host = 2;
+  string socket_host = 3;
+}
+
+message SsrfTrace {
+  SsrfRequest request = 1;
+  bool external_host_reached = 2;
+  bool non_loopback_socket_opened = 3;
+  int64 timestamp_ns = 4;
+}

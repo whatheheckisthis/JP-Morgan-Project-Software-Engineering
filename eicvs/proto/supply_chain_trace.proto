@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package eicvs.supply_chain;
+
+message SupplyChainRequest {
+  string vector_id = 1;
+  bool signature_verified = 2;
+  bool version_pinned = 3;
+}
+
+message SupplyChainTrace {
+  SupplyChainRequest request = 1;
+  bool unsigned_package_accepted = 2;
+  bool unpinned_dependency_resolved = 3;
+  int64 timestamp_ns = 4;
+}

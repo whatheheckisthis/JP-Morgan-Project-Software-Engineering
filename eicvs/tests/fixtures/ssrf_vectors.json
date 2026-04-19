@@ -1,0 +1,58 @@
+{
+  "class_id": "ssrf",
+  "schema_version": "1.0.0",
+  "positive": [
+    {
+      "id": "ssrf_pos_001",
+      "description": "External host and public socket",
+      "payload": {
+        "target_host": "example.com",
+        "socket_host": "8.8.8.8"
+      }
+    },
+    {
+      "id": "ssrf_pos_002",
+      "description": "External localhost alias and non-loopback socket",
+      "payload": {
+        "target_host": "192.168.1.10",
+        "socket_host": "10.0.0.5"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "id": "ssrf_neg_001",
+      "description": "Loopback only",
+      "payload": {
+        "target_host": "127.0.0.1",
+        "socket_host": "127.0.0.1"
+      }
+    },
+    {
+      "id": "ssrf_neg_002",
+      "description": "localhost and loopback socket",
+      "payload": {
+        "target_host": "localhost",
+        "socket_host": "127.0.0.1"
+      }
+    }
+  ],
+  "edge": [
+    {
+      "id": "ssrf_edg_001",
+      "description": "Localhost alias but non-loopback socket",
+      "payload": {
+        "target_host": "localhost",
+        "socket_host": "127.0.0.2"
+      }
+    },
+    {
+      "id": "ssrf_edg_002",
+      "description": "External host but loopback socket",
+      "payload": {
+        "target_host": "example.internal",
+        "socket_host": "127.0.0.1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package eicvs.auth;
+
+message AuthRequest {
+  string vector_id = 1;
+  string credential_strength = 2;
+  bool mfa_present = 3;
+}
+
+message AuthTrace {
+  AuthRequest request = 1;
+  bool weak_credential_accepted = 2;
+  bool missing_mfa_signal = 3;
+  int64 timestamp_ns = 4;
+}

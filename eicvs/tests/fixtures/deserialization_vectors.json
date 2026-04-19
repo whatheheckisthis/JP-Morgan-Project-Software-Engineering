@@ -1,0 +1,64 @@
+{
+  "class_id": "deserialization",
+  "schema_version": "1.0.0",
+  "positive": [
+    {
+      "id": "deserialization_pos_001",
+      "description": "Untrusted any type no guard",
+      "payload": {
+        "source_trusted": false,
+        "coercion_guard_enabled": false,
+        "type_name": "any"
+      }
+    },
+    {
+      "id": "deserialization_pos_002",
+      "description": "Untrusted object",
+      "payload": {
+        "source_trusted": false,
+        "coercion_guard_enabled": true,
+        "type_name": "object"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "id": "deserialization_neg_001",
+      "description": "Trusted typed payload",
+      "payload": {
+        "source_trusted": true,
+        "coercion_guard_enabled": true,
+        "type_name": "dict"
+      }
+    },
+    {
+      "id": "deserialization_neg_002",
+      "description": "Trusted object with guard",
+      "payload": {
+        "source_trusted": true,
+        "coercion_guard_enabled": true,
+        "type_name": "object"
+      }
+    }
+  ],
+  "edge": [
+    {
+      "id": "deserialization_edg_001",
+      "description": "Trusted any type without guard",
+      "payload": {
+        "source_trusted": true,
+        "coercion_guard_enabled": false,
+        "type_name": "any"
+      }
+    },
+    {
+      "id": "deserialization_edg_002",
+      "description": "Untrusted strict dict with guard",
+      "payload": {
+        "source_trusted": false,
+        "coercion_guard_enabled": true,
+        "type_name": "dict"
+      }
+    }
+  ]
+}
