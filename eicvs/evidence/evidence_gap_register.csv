@@ -1,0 +1,2 @@
+gap_id,control_id,classification,description,status,owner,last_reviewed
+GAP-0001,V5.2.4,OWASP Top 10 2021 A10,Add fixture for insecure logging trace scenario,open,security-engineering,2026-04-19
