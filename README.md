@@ -1,9 +1,56 @@
-# Assurance Engineering Portfolio
-## Deterministic Control Validation and Behavioural Analytics — v1.0.0
+### Control Validation — v1.0.0
 
----
+**System Classification**
 
-## Overview
+| Attribute | Classification |
+|----------|----------------|
+| Determinism | ![Deterministic](https://img.shields.io/badge/execution-deterministic-success) |
+| State Model | ![Stateless](https://img.shields.io/badge/state-stateless%20%2F%20bounded-blue) |
+| Auditability | ![Audit](https://img.shields.io/badge/audit-cryptographically%20verifiable-purple) |
+| Execution Model | ![Fail Fast](https://img.shields.io/badge/model-fail--fast-orange) |
+| Runtime Behaviour | ![No Autonomy](https://img.shields.io/badge/runtime-no%20autonomous%20execution-red) |
+
+
+**Input Contract**
+
+| Property | Constraint |
+|----------|-----------|
+| Input Type | ![Static Input](https://img.shields.io/badge/input-static%20%2F%20predefined-blue) |
+| Input Mutation | ![No Mutation](https://img.shields.io/badge/mutation-prohibited-red) |
+| External Dependency | ![No External](https://img.shields.io/badge/dependency-none-red) |
+| Runtime Ingestion | ![Explicit](https://img.shields.io/badge/ingestion-explicit%20invocation-orange) |
+
+
+**Output Contract**
+
+| Property | Constraint |
+|----------|-----------|
+| Output Scope | ![Bounded](https://img.shields.io/badge/output-bounded%20filesystem-success) |
+| Output Mutability | ![Immutable](https://img.shields.io/badge/output-immutable-red) |
+| Output Structure | ![Run Scoped](https://img.shields.io/badge/output-run--scoped-blue) |
+| Output Verification | ![Verifiable](https://img.shields.io/badge/verification-cryptographic-purple) |
+
+**Security Posture**
+
+| Control Domain | Status |
+|---------------|--------|
+| Network Access | ![No Network](https://img.shields.io/badge/network-prohibited-red) |
+| Dynamic Execution | ![No Eval](https://img.shields.io/badge/eval%2Fexec-prohibited-red) |
+| Deserialisation Risk | ![Blocked](https://img.shields.io/badge/deserialisation-blocked-red) |
+| Runtime Learning | ![No Learning](https://img.shields.io/badge/runtime-learning%20disabled-red) |
+| Autonomous Scheduling | ![No Scheduling](https://img.shields.io/badge/scheduling-not%20permitted-red) |
+
+
+### Exploit-Informed Control Validation System (EICVS)
+
+![Assurance System](https://img.shields.io/badge/system-assurance%20engineering-success)
+![Deterministic Pipeline](https://img.shields.io/badge/type-deterministic%20pipeline-blue)
+![Control Validation](https://img.shields.io/badge/domain-control%20validation-purple)
+![Audit Grade](https://img.shields.io/badge/output-audit--grade-orange)
+
+
+
+**Overview**
 
 This repository contains two formally specified, implementation-ready engineering systems developed as part of an independent assurance practice. Both systems are designed for auditability, deterministic execution, and direct translation into software components without requiring design inference.
 
@@ -11,9 +58,17 @@ The first system — the **Exploit-Informed Control Validation System (EICVS)** 
 
 Both systems share the same foundational design commitments: bounded execution, no network access beyond what is strictly declared, append-only or write-once output artefacts, fail-fast error semantics, and full determinism given identical inputs. Neither system remediates, advises, or infers. Both evaluate, map, and record.
 
+| Metadata Field | Specification |
+|----------------|--------------|
+| System ID      | assurance-engineering-portfolio |
+| Document Title | Assurance Engineering Portfolio |
+| Sidebar Label  | Overview |
+| Description    | Deterministic Control Validation and Behavioural Analytics Systems Specification |
+
 ---
 
-## Repository Structure
+
+**REPOSITORY STRUCTURE**
 
 ```
 .
@@ -62,15 +117,13 @@ Both systems share the same foundational design commitments: bounded execution, 
 
 ---
 
-## System One — Exploit-Informed Control Validation System (EICVS)
-
-### What It Is
+**Overview**
 
 EICVS is a deterministic, fixture-bounded, multi-class control validation architecture. It accepts structured representations of known vulnerability classes as typed test vectors, evaluates them against explicit rule sets, maps detected violations to OWASP ASVS 4.0.3 and OWASP Top 10 2021 controls, and emits append-only, SHA-256-chained evidence records. Every state transition is declared, typed, and auditable.
 
 The system does not execute exploit code. It does not scan live systems. It does not connect to any external service. It does not remediate. It evaluates, maps, and records.
 
-### Vulnerability Classes
+**Vulnerability Classes**
 
 | Class | OWASP Top 10 | ASVS Chapter |
 |---|---|---|
@@ -80,7 +133,7 @@ The system does not execute exploit code. It does not scan live systems. It does
 | `supply_chain` | A08:2021 | V10 |
 | `iam` | A01:2021 | V4 |
 
-### Pipeline
+**Pipeline**
 
 Each vulnerability class traverses a six-stage pipeline. Stages are not skippable. Failure at any stage halts the pipeline for that invocation with no fallback.
 
@@ -93,7 +146,7 @@ Stage 4   DETERMINISTIC_VERIFICATION Trace + vectors → pytest result set + JUn
 Stage 5   EVIDENCE_EMISSION         Trace + result → appended EvidenceRecord
 ```
 
-### Evidence Ledger
+**Evidence Ledger**
 
 Every evaluation emits exactly one `EvidenceRecord` to `evidence/evidence_ledger.csv`. The ledger is append-only. No record may be modified or deleted after write. Each record's `record_id` is a SHA-256 function of `(previous_record_id, input_fp, timestamp_ns)`, forming a verifiable chain across all pipeline classes and all invocations.
 
@@ -107,11 +160,11 @@ Chain integrity is verifiable at any time without the original input vectors:
 make verify-chain
 ```
 
-### Control Mapping
+**Control Mapping**
 
 Control mappings are not looked up at runtime and not loaded from configuration. They are encoded as explicit conditional branches in each fixture's `_map_controls()` method. Every violation-indicating analysis field maps to one or more `ControlTrigger` records, each carrying an exact ASVS control ID and an exact OWASP Top 10 item. An unmapped field is a hard pipeline failure, not a silent omission.
 
-### Running
+**Running**
 
 ```bash
 # Run a single class
@@ -130,7 +183,7 @@ make audit-gate
 make gap-check
 ```
 
-### Adding a New Vulnerability Class
+**Vulnerability Class**
 
 A class is not deployable until all of the following are committed:
 
@@ -145,7 +198,7 @@ A class is not deployable until all of the following are committed:
 
 Partial class definitions are not deployable. The CI audit gate enforces this via gap register checks.
 
-### Key Constraints
+**Key Constraints**
 
 - Network binding is restricted to `127.0.0.1`. Any socket opened to an external address is a security defect, not a configuration error.
 - Payload field values are never executed as code, passed to `eval()` or `exec()`, or deserialised into a live object graph.
@@ -155,15 +208,15 @@ Partial class definitions are not deployable. The CI audit gate enforces this vi
 
 ---
 
-## System Two — Behavioural Analytics Pipeline (BAP)
+### Behavioural Analytics Pipeline (BAP)
 
-### What It Is
+**Overview**
 
 BAP is a multi-stage behavioural analytics pipeline that ingests heterogeneous source data — Enron email corpus and financial transaction records — normalises it through schema alignment and type enforcement, derives NLP and financial features per entity, applies PCA-based dimensionality reduction for variance isolation and collinearity elimination, and routes the reduced feature space through anomaly detection and behaviour segmentation models to produce risk profiles, alert candidates, and governance-ready audit reports. A validation controller operates as a parallel control layer across the modelling stage.
 
 The pipeline does not connect to external systems. It does not fetch data at runtime. It does not produce remediation advice. It does not run persistently. Each invocation is bounded and terminates.
 
-### Pipeline
+**Pipeline**
 
 The pipeline is a seven-stage finite state machine. Stages are not skippable. Failure at any stage halts the pipeline for that invocation.
 
@@ -177,7 +230,7 @@ Stage 5   VALIDATION                All intermediate outputs → ValidationResul
 Stage 6   OUTPUT_EMISSION           ScoredEntityFrame + ValidationResult → five output files
 ```
 
-### Input Sources
+**Input Sources**
 
 | Source | Format | Path |
 |---|---|---|
@@ -187,7 +240,7 @@ Stage 6   OUTPUT_EMISSION           ScoredEntityFrame + ValidationResult → fiv
 
 All input data is pre-staged. No runtime data fetch is permitted. Source files are opened in read-only mode. No source file is modified by the pipeline.
 
-### Feature Engineering
+**Feature Engineering**
 
 NLP features and financial features are derived per `entity_id` and assembled into a typed `FeatureMatrix`. All null values are resolved to typed zero before the matrix is passed downstream. No `NaN` value is permitted in the `FeatureMatrix` output.
 
@@ -197,13 +250,13 @@ Financial features include transaction volume, absolute transaction total, avera
 
 All feature derivation constants — keyword watchlist, business hours range, large transaction threshold, rolling window — are declared as module-level `Final` values. Runtime modification is prohibited.
 
-### Dimensionality Reduction
+**Dimensionality Reduction**
 
 PCA is applied after collinearity removal and standard scaling. Zero-variance columns are dropped before scaling. Columns with pairwise Pearson correlation above `COLLINEARITY_THRESHOLD` are reduced by retaining the first column in each correlated pair. `PCA_RANDOM_STATE` is a declared constant, ensuring reproducibility across invocations.
 
 All dropped columns and PCA parameters are recorded in a `PCAMetadata` record that is carried through to the governance report.
 
-### Modelling
+**Modelling**
 
 Two models are applied to the reduced feature space:
 
@@ -213,7 +266,7 @@ Two models are applied to the reduced feature space:
 
 Model artefacts are not persisted to the filesystem. The scored output is the deliverable.
 
-### Validation
+**Validation**
 
 The validation controller runs eight checks against all intermediate and final outputs before emission. Seven are halting: a failed check raises `ValidationError` and exits the pipeline non-zero. One is advisory: a warning is written to `validation_log` and execution continues.
 
@@ -228,7 +281,7 @@ The validation controller runs eight checks against all intermediate and final o
 | CHECK-VAL-07 | Advisory | Anomaly rate is within declared bounds |
 | CHECK-VAL-08 | Halting | Parameter log contains entries for all declared constants |
 
-### Outputs
+**Outputs**
 
 All outputs are written to `outputs/<run_id>/`. The `run_id` is computed once at pipeline start as `YYYYMMDD_HHMMSS_<sha256_of_inputs[:8]>` and is used across all output filenames. No output file is opened in append mode. Prior run directories are not modified.
 
@@ -240,7 +293,7 @@ All outputs are written to `outputs/<run_id>/`. The `run_id` is computed once at
 | `validation_log.<run_id>.json` | Per-check results and messages |
 | `parameter_log.<run_id>.json` | All declared constants serialised at run time |
 
-### Running
+**Running**
 
 ```bash
 # Run the full pipeline
@@ -253,7 +306,7 @@ make test
 make clean
 ```
 
-### Key Constraints
+**Key Constraints**
 
 - No network socket is opened at any stage under any condition.
 - No ingested field value is passed to `eval()`, `exec()`, `pickle.loads()`, or any equivalent.
@@ -263,7 +316,7 @@ make clean
 
 ---
 
-## Design Commitments (Both Systems)
+**Design Commitments**
 
 Both systems are built on the same set of non-negotiable design properties.
 
@@ -281,7 +334,7 @@ Both systems are built on the same set of non-negotiable design properties.
 
 ---
 
-## Codex Implementation Contracts
+**Implementation Contracts**
 
 Formal implementation contracts for both systems are provided in `codex/`. Each contract defines the full system as a set of bounded modules with explicit inputs, outputs, function contracts, data schemas, error conditions, and global invariants. They are written for direct translation into software components without requiring interpretation or design inference.
 
@@ -292,7 +345,7 @@ Formal implementation contracts for both systems are provided in `codex/`. Each 
 
 ---
 
-## Versioning
+**Versioning**
 
 | Artefact | Version |
 |---|---|
@@ -305,6 +358,6 @@ Version constants are declared as module-level `Final[str]` values in each modul
 
 ---
 
-## Status
+**Status**
 
 Both systems are in active specification. Implementation targets are sequenced against formal accreditation milestones. The EICVS codex contract is complete. The BAP codex contract is complete. Stub constant population for BAP is pending domain value decisions (`KEYWORD_WATCHLIST`, `LARGE_TXN_THRESHOLD`, `COLLINEARITY_THRESHOLD`, `IF_CONTAMINATION`, `KM_N_CLUSTERS`).
