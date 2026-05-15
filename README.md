@@ -14,6 +14,7 @@ The repository is oriented toward:
 
 # Semantic Configuration Model
 A configuration is defined as:
+
 ```text
 C = (v, σ)
 
@@ -26,6 +27,7 @@ v  ∈ V(λ)
 * v denotes vector-length indexed state
 * σ denotes an abstract architectural projection
 * each vector length induces a distinct state space
+```
 
 The framework does not model:
 
@@ -38,20 +40,21 @@ The framework does not model:
 
 These are treated as abstract execution infrastructure external to the semantic system.
 
-⸻
+
 
 Observational Semantics
 
 Observation is defined through an observation function:
-
+```text
 O : C → O
-
+```
 Observational equivalence is defined as:
 
+```text
 C₁ ≈ C₂  ⇔  O(C₁) = O(C₂)
+```
 
 Equivalence is defined only over observable architectural behaviour.
-
 The semantic system isolates vector-length indexed structure as the sole divergence dimension under transition and reconfiguration.
 
 
@@ -59,13 +62,12 @@ The semantic system isolates vector-length indexed structure as the sole diverge
 Transition System
 
 The framework defines a labelled transition system:
-
+```text
 C ─α→ C′
 
 where:
-
 α ∈ {exec, mig, reconf}
-
+```
 Transition interpretation:
 
 * exec   : execution transition within a fixed vector-length space
@@ -127,11 +129,11 @@ The framework uses bisimulation to reason about observational equivalence preser
 Main Preservation Result
 
 Migration preservation is expressed as:
-
+```
 C_H ⊑ C_G
 ⇒
 O(mig(C_H)) = O(mig(C_G))
-
+```
 The proof structure is established through:
 
 * embedding preservation,
