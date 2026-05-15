@@ -1,67 +1,206 @@
-# ARM Virtualisation Execution Correctness
+# Parameterised SVE State Semantics under Virtualisation-Structured Dynamics
+>This repository contains a formal semantic framework for reasoning about observational equivalence and refinement over parameterised SVE execution state under abstract virtualisation-mediated transitions.
+The system models vector-length indexed execution state as a first-class semantic object and defines a labelled transition structure over architectural projections. The framework deliberately excludes hardware, hypervisor, scheduling, MMU, and implementation-specific execution mechanisms, treating execution infrastructure as an abstract correctness-preserving environment.
+The repository is oriented toward:
 
-This repository includes an ARM virtualisation and execution-correctness scaffold for Azure Cobalt-class Neoverse infrastructure.  The model treats execution correctness as a register-level property over the global state:
-
-```text
-S = ⟨S_EL2, S_Stage2, S_SVE2, S_QEMU, S_KVM, S_Microarch⟩
-```
-
-Component state is explicit:
-
-```text
-S_EL2       = ⟨HCR_EL2, VTTBR_EL2, VTCR_EL2, DAIF, ELR_EL2, SPSR_EL2⟩
-S_Stage2    = ⟨VMID, IPA→PA_table, fault_log⟩
-S_SVE2      = ⟨Z₀..₃₁, P₀..₁₅, FFR, VL⟩
-S_QEMU      = ⟨Σ_stable, ID_reg_mask, VCPU_cfg⟩
-S_KVM       = ⟨S_VCPU, exit_reason, run_state⟩
-S_Microarch = ⟨BTB_state, BHB_state, LLC_state, RSB_state, pipeline_state⟩
-```
-
-No component state is inferred, defaulted, or implicitly carried across VM entry or VM exit. Every transition is explicit, bounded, and verifiable at the named register, table, or architectural state element.
-
-## Correctness Definition
-
-```text
-CORRECT(S) ⟺
-  Arch_Correct(S)
-  ∧ Isolation_Correct(S)
-  ∧ Microarch_Noninterference(S)
-  ∧ Projection_Correct(S)
-```
-
-- `Arch_Correct(S)`: `S_EL2`, `S_Stage2`, `S_SVE2`, and `S_KVM` transitions conform to ARM ARM DDI0487K and KVM/ARM64 behaviour.
-- `Isolation_Correct(S)`: no guest observes another guest or EL2 through architectural instruction or exception mechanisms.
-- `Microarch_Noninterference(S)`: cache timing, `BTB_state`, `BHB_state`, `RSB_state`, and `pipeline_state` do not reveal protected memory access patterns or branch behaviour.
-- `Projection_Correct(S)`: `Σ_stable ⊆ Σ_host`; QEMU exposes only fleet-stable architectural features through ID register masking.
-
-## Core Invariants
-
-```text
-I₁:  HCR_EL2.VM = 1               ∀ S_VCPU ∈ {running, vmexit}
-I₂:  VTCR_EL2.PS ≥ host_PA_range  at VCPU creation; not modifiable thereafter
-I₃:  VL ∈ {128, 256, 512, 1024, 2048} ∧ VL ≤ VL_max(substrate)
-I₄:  VL invariant ∀ t ≥ t_configured
-I₅:  Σ_stable = Σ_host ∩ Σ_guest   computed once at VCPU creation
-I₆:  SVE_SAVE_EXTRA: Z then P then FFR; violation is a correctness fault
-I₇:  DAIF restored atomically at EL1 re-entry; partial restoration not permitted
-I₈:  VMID(VTTBR_EL2) unique across all S_VCPU = running instances
-I₉:  (V3/RME) No Stage-2 PTE maps Realm or Secure PAS
-I₁₀: BRBE disabled or context-saved before each VM entry unless guest BRBE granted
-I₁₁: RDVL result × 8 = configured VL; divergence is an observable fault
-I₁₂: MTE3 VCPU not migrated to host where MTE3 absent; silent downgrade rejected
-I₁₃: QARMA3 PAC keys not masked from guest on V3-homogeneous fleet only
-I₁₄: CLEARBHB issued at EL2 entry on N2/V3 hosts regardless of CSV2 field value
-```
-
-## Correctness Artefacts
-
-- [`el2_control.md`](el2_control.md): `HCR_EL2`, `DAIF`, VM entry/exit, EL2 save/restore, `ZCR_EL2`.
-- [`stage2_isolation.md`](stage2_isolation.md): `VTTBR_EL2`, `VTCR_EL2`, `VMID`, `IPA→PA_table`, Stage-2 fault invariants.
-- [`sve2_execution.md`](sve2_execution.md): `Z₀..Z₃₁`, `P₀..P₁₅`, `FFR`, `VL`, SVE2 feature detection, save/restore ordering.
-- [`kvm_lifecycle.md`](kvm_lifecycle.md): `S_VCPU`, `KVM_RUN`, `KVM_SET_ONE_REG`, `KVM_GET_ONE_REG`, migration constraints.
-- [`qemu_projection.md`](qemu_projection.md): `Σ_host ∩ Σ_guest → Σ_stable`, ID register masking, heterogeneous substrate projection.
-- [`threat_model.md`](threat_model.md): Spectre-v1/v2/BHB, Meltdown, cache timing, RSB underflow, BRBE, pipeline observability.
-- [`cobalt_constraints.md`](cobalt_constraints.md): Azure Cobalt 100/200, Neoverse N2/V3, PAC, MTE, RME constraints.
-- [`correctness_model.md`](correctness_model.md): full invariant set, correctness conjunction, NTT cryptographic execution constraints.
+- refinement semantics,
+- bisimulation structure,
+- vector-length indexed state reasoning,
+- migration invariance,
+- observational equivalence,
+- and formally structured transition systems.
 
 ---
+
+# Semantic Configuration Model
+A configuration is defined as:
+```text
+C = (v, σ)
+
+where:
+
+v  ∈ V(λ)
+σ  ∈ Σ
+λ ∈ {128, 256, 512}
+
+* v denotes vector-length indexed state
+* σ denotes an abstract architectural projection
+* each vector length induces a distinct state space
+
+The framework does not model:
+
+* EL2 implementation,
+* Stage-2 MMU behaviour,
+* VMID allocation,
+* scheduling,
+* microarchitectural state,
+* or hardware execution internals.
+
+These are treated as abstract execution infrastructure external to the semantic system.
+
+⸻
+
+Observational Semantics
+
+Observation is defined through an observation function:
+
+O : C → O
+
+Observational equivalence is defined as:
+
+C₁ ≈ C₂  ⇔  O(C₁) = O(C₂)
+
+Equivalence is defined only over observable architectural behaviour.
+
+The semantic system isolates vector-length indexed structure as the sole divergence dimension under transition and reconfiguration.
+
+
+
+Transition System
+
+The framework defines a labelled transition system:
+
+C ─α→ C′
+
+where:
+
+α ∈ {exec, mig, reconf}
+
+Transition interpretation:
+
+* exec   : execution transition within a fixed vector-length space
+* mig    : abstract migration transformation
+* reconf : vector-length reconfiguration transition
+
+Execution preserves vector length.
+Reconfiguration permits transition across vector-length indexed state spaces.
+
+
+
+Embedding Between Vector-Length Spaces
+
+An embedding is defined between vector-length indexed state spaces:
+
+ι_λ₁→λ₂ : V(λ₁) → V(λ₂)
+
+such that:
+
+λ₁ ≤ λ₂
+
+and:
+
+O(ι(v)) = O(v)
+
+The embedding acts as a structure-preserving injection across vector-length configurations.
+
+
+
+Refinement Relation
+
+Refinement is defined as a forward simulation relation:
+
+C₁ ⊑ C₂
+
+iff for all transitions:
+
+C₂ ─α→ C′₂
+⇒
+∃C′₁ :
+C₁ ─α→ C′₁ ∧ C′₁ ≈ C′₂
+
+The refinement relation establishes behavioural preservation under execution, migration, and reconfiguration transitions.
+
+
+
+Bisimulation
+
+A relation R is a bisimulation if:
+
+C₁ R C₂ ⇒ C₁ ≈ C₂
+
+and transitions are matched in both directions.
+
+The framework uses bisimulation to reason about observational equivalence preservation across parameterised execution configurations.
+
+
+
+Main Preservation Result
+
+Migration preservation is expressed as:
+
+C_H ⊑ C_G
+⇒
+O(mig(C_H)) = O(mig(C_G))
+
+The proof structure is established through:
+
+* embedding preservation,
+* refinement stability,
+* migration invariance,
+* trace preservation,
+* and transition commutativity.
+
+
+
+Core Semantic Properties
+
+P₁:  Each vector length induces a distinct indexed state space
+P₂:  Observational equivalence depends only on architectural projection σ
+P₃:  Embedding preserves observable behaviour
+P₄:  Refinement is stable under transition execution
+P₅:  Migration preserves observational semantics
+P₆:  Refinement is preserved over execution traces
+P₇:  Transition application commutes with vector-state embedding
+
+
+
+Repository Structure
+
+* semantic_foundations.md
+    * vector-length indexed state definitions
+    * configuration well-formedness
+    * state-space construction
+* observational_semantics.md
+    * observation function
+    * observational equivalence
+    * architectural projection semantics
+* transition_system.md
+    * labelled transition structure
+    * execution, migration, and reconfiguration semantics
+* embedding_relations.md
+    * vector-length embeddings
+    * structure-preserving injections
+    * observational preservation
+* refinement.md
+    * forward simulation relations
+    * refinement stability
+    * trace preservation
+* bisimulation.md
+    * bisimulation structure
+    * coinductive equivalence relations
+    * behavioural correspondence
+* migration_preservation.md
+    * migration invariance theorem
+    * preservation lemmas
+    * commutativity properties
+* lean/
+    * formal theorem structure
+    * semantic encodings
+    * proof scaffolding
+    * relational constructions
+
+
+
+Scope
+
+This repository is a semantic and relational formalisation framework.
+
+It is not:
+
+* a hardware implementation,
+* a hypervisor implementation,
+* a kernel engineering project,
+* a QEMU/KVM deployment repository,
+* or a microarchitectural execution model.
+
+The system models abstract semantic preservation properties over parameterised SVE execution state under virtualisation-structured dynamics.
