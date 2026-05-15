@@ -241,3 +241,23 @@ This includes studying:
 - when two systems are observationally equivalent
 - when transformations preserve behavioural semantics
 - how refinement and bisimulation relations are maintained under migration-like dynamics
+
+---
+
+### References:
+
+Milner, Robin. Communication and Concurrency. Prentice Hall, 1989.
+
+Park, David. “Concurrency and Automata on Infinite Sequences.” Theoretical Computer Science, vol. 138, no. 2, 1982, pp. 167–183.
+
+Larsen, Kim G., and Arne Skou. “Bisimulation through Probabilistic Testing.” Information and Computation, vol. 94, no. 1, 1991, pp. 1–28.
+
+Milner, Robin. A Calculus of Communicating Systems. Springer, 1980.
+
+Hennessy, Matthew, and Robin Milner. “Algebraic Laws for Nondeterminism and Concurrency.” Journal of the ACM, vol. 32, no. 1, 1985, pp. 137–161.
+
+Winskel, Glynn. The Formal Semantics of Programming Languages: An Introduction. MIT Press, 1993.
+
+Plotkin, Gordon D. “A Structural Approach to Operational Semantics.” Aarhus University, 1981.
+
+Aspinall, David, and Lars Birkedal. “Type-Theoretic Foundations of Programming Languages.” In Handbook of Logic in Computer Science, vol. 5, Oxford University Press, 2000.
