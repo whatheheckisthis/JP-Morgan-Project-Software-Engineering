@@ -60,7 +60,7 @@ C₁ ≈ C₂  ⇔  O(C₁) = O(C₂)
 
 
 
-**Transition System**
+**Transition System:**
 
 The framework defines a labelled transition system:
 ```text
@@ -215,7 +215,6 @@ This framework is *not*:
 - a microarchitectural execution model
 - a systems-level emulator or simulator
 
-### Semantic Domain:
 
 The system models *abstract execution semantics* over parameterised state representations, with emphasis on:
 
@@ -223,8 +222,6 @@ The system models *abstract execution semantics* over parameterised state repres
 - relational reasoning over state transformations
 - equivalence notions under structural variation
 - compositional behaviour of transitions
-
-### State and Execution Interpretation:
 
 The formal objects in this repository are interpreted as:
 
